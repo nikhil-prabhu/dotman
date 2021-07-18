@@ -8,7 +8,10 @@ use std::path::Path;
 /// # Arguments
 ///
 /// * `src` - The path to the repository on the filesystem.
-fn open(src: &Path) -> Result<Repository, GitError> {
+fn open<P>(src: P) -> Result<Repository, GitError>
+where
+	P: AsRef<Path> + Copy,
+{
 	Repository::open(src)
 }
 
@@ -26,20 +29,23 @@ fn open(src: &Path) -> Result<Repository, GitError> {
 /// ```
 /// use dotfiles;
 ///
-/// let src = "";
-/// let dest = std::path::Path::new("");
-/// let repo = dotfiles::clone(src, &dest, true).unwrap();
+/// let src = "https://github.com/nikhil-prabhu/dotman";
+/// let dest = "/home/username/Downloads/dotman/";
+/// let repo = dotfiles::clone(src, dest, true).unwrap();
 /// ```
 ///
 /// ## Skip cloning if repository already exists locally
 /// ```
 /// use dotfiles;
 ///
-/// let src = "";
-/// let dest = std::path::Path::new("");
-/// let repo = dotfiles::clone(src, &dest, false).unwrap();
+/// let src = "https://github.com/nikhil-prabhu/dotman";
+/// let dest = "/home/username/Downloads/dotman/";
+/// let repo = dotfiles::clone(src, dest, false).unwrap();
 /// ```
-pub fn clone(src: &str, dest: &Path, force: bool) -> Result<Repository, GitError> {
+pub fn clone<P>(src: &str, dest: P, force: bool) -> Result<Repository, GitError>
+where
+	P: AsRef<Path> + Copy,
+{
 	let repo = Repository::clone(src, dest);
 
 	match repo {
