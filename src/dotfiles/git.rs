@@ -1,17 +1,14 @@
 //! Module for working with Git.
 use git2::{Error as GitError, ErrorCode, Repository};
 use std::fs;
-use std::path::Path;
+use std::path::PathBuf;
 
 /// Opens an existing repository on the filesystem.
 ///
 /// # Arguments
 ///
 /// * `src` - The path to the repository on the filesystem.
-fn open<P>(src: P) -> Result<Repository, GitError>
-where
-	P: AsRef<Path> + Copy,
-{
+fn open(src: PathBuf) -> Result<Repository, GitError> {
 	Repository::open(src)
 }
 
@@ -29,24 +26,21 @@ where
 /// ```
 /// use dotfiles;
 ///
-/// let src = "https://github.com/nikhil-prabhu/dotman";
-/// let dest = "/home/username/Downloads/dotman/";
-/// let repo = dotfiles::clone(src, dest, true).unwrap();
+/// let src = "";
+/// let dest = std::path::Path::new("");
+/// let repo = dotfiles::clone(src, &dest, true).unwrap();
 /// ```
 ///
 /// ## Skip cloning if repository already exists locally
 /// ```
 /// use dotfiles;
 ///
-/// let src = "https://github.com/nikhil-prabhu/dotman";
-/// let dest = "/home/username/Downloads/dotman/";
-/// let repo = dotfiles::clone(src, dest, false).unwrap();
+/// let src = "";
+/// let dest = std::path::Path::new("");
+/// let repo = dotfiles::clone(src, &dest, false).unwrap();
 /// ```
-pub fn clone<P>(src: &str, dest: P, force: bool) -> Result<Repository, GitError>
-where
-	P: AsRef<Path> + Copy,
-{
-	let repo = Repository::clone(src, dest);
+pub fn clone(src: &str, dest: PathBuf, force: bool) -> Result<Repository, GitError> {
+	let repo = Repository::clone(src, dest.clone());
 
 	match repo {
 		Ok(_) => repo,
@@ -55,17 +49,17 @@ where
 				// If the local folder exists and we don't want to force the
 				// clone operation, we just open the existing directory.
 				if !force {
-					return open(dest);
+					return open(dest.clone());
 				}
 
 				// If we want to force the clone operation when the destination
 				// directory already exists, we remove the directory and then
 				// call the clone operation again.
-				fs::remove_dir_all(dest).unwrap();
+				fs::remove_dir_all(dest.clone()).unwrap();
 
 				// NOTE: we specify `force=false` here to avoid any possibility
 				// of an infinite recursion of the clone operation.
-				return clone(src, dest, false);
+				return clone(src, dest.clone(), false);
 			}
 			// For any other error during the clone operation, we return the
 			// error to the caller.
