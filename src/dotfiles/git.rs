@@ -8,7 +8,7 @@ use std::path::PathBuf;
 /// # Arguments
 ///
 /// * `src` - The path to the repository on the filesystem.
-fn open(src: PathBuf) -> Result<Repository, GitError> {
+fn open(src: &PathBuf) -> Result<Repository, GitError> {
 	Repository::open(src)
 }
 
@@ -39,7 +39,7 @@ fn open(src: PathBuf) -> Result<Repository, GitError> {
 /// let dest = std::path::Path::new("");
 /// let repo = dotfiles::clone(src, &dest, false).unwrap();
 /// ```
-pub fn clone(src: &str, dest: PathBuf, force: bool) -> Result<Repository, GitError> {
+pub fn clone(src: &str, dest: &PathBuf, force: bool) -> Result<Repository, GitError> {
 	let repo = Repository::clone(src, dest.clone());
 
 	match repo {
@@ -49,17 +49,17 @@ pub fn clone(src: &str, dest: PathBuf, force: bool) -> Result<Repository, GitErr
 				// If the local folder exists and we don't want to force the
 				// clone operation, we just open the existing directory.
 				if !force {
-					return open(dest.clone());
+					return open(dest);
 				}
 
 				// If we want to force the clone operation when the destination
 				// directory already exists, we remove the directory and then
 				// call the clone operation again.
-				fs::remove_dir_all(dest.clone()).unwrap();
+				fs::remove_dir_all(dest).unwrap();
 
 				// NOTE: we specify `force=false` here to avoid any possibility
 				// of an infinite recursion of the clone operation.
-				return clone(src, dest.clone(), false);
+				return clone(src, dest, false);
 			}
 			// For any other error during the clone operation, we return the
 			// error to the caller.

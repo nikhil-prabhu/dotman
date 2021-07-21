@@ -33,10 +33,10 @@ fn main() {
     // TODO: Improve all the following logging messages.
     logger.info(&format!("Cloning dotfiles to {}", &dest.display()));
 
-    match dotfiles::clone(&flags.repo, dest.clone(), true) {
+    match dotfiles::clone(&flags.repo, &dest, true) {
         Ok(_) => logger.success(&format!(
             "Successfully cloned dotfiles to {}",
-            dest.clone().display(),
+            dest.display(),
         )),
         // TODO: Print actual error message, rather than being a lazy twat.
         Err(_) => logger.error("An error occured while cloning dotfiles."),

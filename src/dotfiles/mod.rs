@@ -12,6 +12,6 @@ pub mod git;
 /// * `src` - The URL of the dotfiles repository.
 /// * `dest` - The path to the local filesystem directory.
 /// * `force` - Force the clone operation to overwrite an existing local directory.
-pub fn clone(src: &str, dest: PathBuf, force: bool) -> Result<Repository, GitError> {
+pub fn clone(src: &str, dest: &PathBuf, force: bool) -> Result<Repository, GitError> {
 	git::clone(src, dest, force)
 }
