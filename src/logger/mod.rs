@@ -4,7 +4,7 @@ extern crate chrono;
 
 use ansi_term::{Color, Style};
 use chrono::Local;
-use std::io;
+use std::{io, process};
 
 /// Returns the current time in the format H:M:S (Hours, Minutes and Seconds)
 fn get_fmt_time() -> String {
@@ -169,5 +169,34 @@ impl Logger {
 			msg,
 		)
 		.unwrap();
+	}
+
+	/// Writes a message to the target with the label `FATAL` and the current timestamp.
+	/// Also terminates the program with exit code 1.
+	///
+	/// # Arguments
+	///
+	/// * `msg` - The message to write.
+	///
+	/// # Examples
+	///
+	/// Basic usage:
+	/// ```
+	/// use logger::{Logger, Target};
+	///
+	/// let mut logger = Logger::new(Target::Stdout);
+	/// logger.fatal("This is a fatal error message.");
+	/// ```
+	pub fn fatal(&mut self, msg: &str) {
+		writeln!(
+			self.target,
+			"{} [{}]: {}",
+			Color::Red.bold().paint("FATAL"),
+			Style::new().bold().paint(get_fmt_time()),
+			msg,
+		)
+		.unwrap();
+
+		process::exit(1);
 	}
 }
