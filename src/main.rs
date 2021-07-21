@@ -27,8 +27,19 @@ fn main() {
     // we use the current working directory.
     let dest = match flags.dest {
         Some(d) => d,
-        None => env::current_dir().unwrap(),
+        None => {
+            if let Ok(d) = env::current_dir() {
+                d
+            } else {
+                // If current dir couldn't be determined, return an empty PathBuf.
+                PathBuf::new()
+            }
+        }
     };
+
+    if !dest.exists() {
+        logger.fatal("Could not determine the current working directory.");
+    }
 
     // TODO: Improve all the following logging messages.
     logger.info(&format!("Cloning dotfiles to {}", &dest.display()));
@@ -39,6 +50,6 @@ fn main() {
             dest.display(),
         )),
         // TODO: Print actual error message, rather than being a lazy twat.
-        Err(_) => logger.error("An error occured while cloning dotfiles."),
+        Err(_) => logger.fatal("An error occured while cloning dotfiles."),
     }
 }
