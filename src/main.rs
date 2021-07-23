@@ -92,15 +92,16 @@ fn main() {
             if let Ok(d) = env::current_dir() {
                 d
             } else {
-                // If current dir couldn't be determined, return an empty PathBuf.
-                PathBuf::new()
+                // If current dir couldn't be determined, fail with fatal error.
+                logger.fatal("Could not determine the current working directory.");
+
+                // NOTE: The program terminates with the previous statement.
+                // The following macro prevents the compiler from complaining
+                // about match arms having incompatible types.
+                unreachable!();
             }
         }
     };
-
-    if !dest.exists() {
-        logger.fatal("Could not determine the current working directory.");
-    }
 
     banner("TASK: Clone dotfiles.", None, None);
     // TODO: Improve all the following logging messages.
