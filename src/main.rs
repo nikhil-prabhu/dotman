@@ -5,7 +5,10 @@ use logger::{Logger, Target};
 use std::env;
 use std::path::PathBuf;
 use structopt::StructOpt;
+use terminal_size::{terminal_size, Height, Width};
 
+const DEFAULT_TERM_WIDTH: u16 = 50; // 50 columns
+const DOTMAN_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const DOTMAN_LOGO: &str = "
        oooo             o8                                        
   ooooo888   ooooooo  o888oo oo ooo oooo    ooooooo   oo oooooo   
@@ -26,8 +29,56 @@ struct Flags {
     dest: Option<PathBuf>,
 }
 
+// ? Implementation could probably could be improved.
+/// Prints a banner on the console with the specified message.
+///
+/// The function allows the caller to specify the decorator to use and the
+/// desired width of the banner. If neither of these are specified OR if the
+/// console width cannot be determined, default values are used instead.
+///
+/// # Arguments
+///
+/// * `msg` - The message to display.
+/// * `dec` - The character to use as a decorator.
+/// * `width` - The width of the banner.
+fn banner(msg: &str, dec: Option<char>, width: Option<u16>) {
+    let size = terminal_size();
+    let dec = match dec {
+        Some(d) => d,
+        None => '*',
+    };
+    let width: u16 = match width {
+        Some(w) => w,
+        None => {
+            if let Some((Width(w), Height(_))) = size {
+                w
+            } else {
+                DEFAULT_TERM_WIDTH
+            }
+        }
+    };
+
+    // Generate the banner lines from the separator using the width.
+    let mut iter = 0;
+    let mut line = String::new();
+
+    while iter < width {
+        line.push(dec);
+        iter += 1;
+    }
+
+    // Print the banner.
+    println!("{}", line);
+    println!("{}", msg);
+    println!("{}", line);
+    println!();
+}
+
 fn main() {
     println!("{}", DOTMAN_LOGO);
+    // Disgusting way of centering the following text, but I have no alternative
+    // at the moment.
+    println!("                         VERSION: {}\n", DOTMAN_VERSION);
 
     // Parse command line flags and create a logger.
     let flags = Flags::from_args();
@@ -51,6 +102,7 @@ fn main() {
         logger.fatal("Could not determine the current working directory.");
     }
 
+    banner("TASK: Clone dotfiles.", None, None);
     // TODO: Improve all the following logging messages.
     logger.info(&format!("Cloning dotfiles to {}", &dest.display()));
 
