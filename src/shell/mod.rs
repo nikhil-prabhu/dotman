@@ -1,6 +1,7 @@
 //! Module for working with shell operations.
 use std::{
 	io,
+	path::PathBuf,
 	process::{Child, Command, ExitStatus, Output},
 };
 
@@ -109,4 +110,36 @@ pub fn run(cmd: &str) {
 	}
 
 	let _ = status(cmd, Some(&args));
+}
+
+// TODO: add option to write script output to a stream/file.
+// TODO: add option to specify script interpreter to use.
+/// Executes a script and returns a boolean indicating if the script ran successfully
+/// or failed (`true` indicates success and `false` indicates failure).
+///
+/// Currently, it is mandatory for the script to contain a shebang specifying
+/// the interpreter to use to run the script. This may change in the future.
+///
+/// # Arguments
+///
+/// * `path` - The path to the script to execute.
+///
+/// # Examples
+///
+/// Running a script and printing a message based on success or failure:
+/// ```
+/// let script = std::path::PathBuf::from("/usr/bin/hello.sh");
+///
+/// if shell::run(&script) {
+/// 	println!("Script successfully executed.");
+/// } else {
+/// 	println!("Script failed to execute.");
+/// }
+/// ```
+pub fn run_script(path: &PathBuf) -> bool {
+	if let Ok(_) = output(path.to_str().unwrap(), None) {
+		return true;
+	}
+
+	false
 }
