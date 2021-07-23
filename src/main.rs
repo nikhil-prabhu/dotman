@@ -6,6 +6,14 @@ use std::env;
 use std::path::PathBuf;
 use structopt::StructOpt;
 
+const DOTMAN_LOGO: &str = "
+       oooo             o8                                        
+  ooooo888   ooooooo  o888oo oo ooo oooo    ooooooo   oo oooooo   
+888    888 888     888 888    888 888 888   ooooo888   888   888  
+888    888 888     888 888    888 888 888 888    888   888   888  
+  88ooo888o  88ooo88    888o o888o888o888o 88ooo88 8o o888o o888o 
+";
+
 /// > Help message goes here. <
 // TODO: Improve the flag names(?).
 #[derive(StructOpt)]
@@ -19,6 +27,8 @@ struct Flags {
 }
 
 fn main() {
+    println!("{}", DOTMAN_LOGO);
+
     // Parse command line flags and create a logger.
     let flags = Flags::from_args();
     let mut logger = Logger::new(Target::Stdout);
