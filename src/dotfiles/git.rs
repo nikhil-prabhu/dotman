@@ -1,7 +1,7 @@
 //! Module for working with Git.
-use git2::{Error as GitError, ErrorCode, Repository};
-use std::fs;
-use std::path::PathBuf;
+use fs_extra::dir::{move_dir, CopyOptions};
+use git2::{Error as GitError, Repository};
+use std::{fs, path::PathBuf};
 
 /// Opens an existing repository on the filesystem.
 ///
@@ -26,8 +26,8 @@ fn open(src: &PathBuf) -> Result<Repository, GitError> {
 /// ```
 /// use dotfiles;
 ///
-/// let src = "";
-/// let dest = std::path::Path::new("");
+/// let src = "https://github.com/john-doe/hello-world";
+/// let dest = std::path::PathBuf::from("/home/johndoe/hello-world");
 /// let repo = dotfiles::clone(src, &dest, true).unwrap();
 /// ```
 ///
@@ -35,35 +35,46 @@ fn open(src: &PathBuf) -> Result<Repository, GitError> {
 /// ```
 /// use dotfiles;
 ///
-/// let src = "";
-/// let dest = std::path::Path::new("");
+/// let src = "https://github.com/john-doe/hello-world";
+/// let dest = std::path::PathBuf::from("/home/johndoe/hello-world");
 /// let repo = dotfiles::clone(src, &dest, false).unwrap();
 /// ```
 pub fn clone(src: &str, dest: &PathBuf, force: bool) -> Result<Repository, GitError> {
-	let repo = Repository::clone(src, dest.clone());
+	// Check if destination directory already exists locally.
+	if dest.exists() {
+		// If `force` is set to `false`, we skip the clone operation and just
+		// open the local directory.
+		if !force {
+			return open(&dest);
+		}
 
-	match repo {
-		Ok(_) => repo,
-		Err(e) => match e.code() {
-			ErrorCode::Exists => {
-				// If the local folder exists and we don't want to force the
-				// clone operation, we just open the existing directory.
-				if !force {
-					return open(dest);
-				}
+		// If `force` is set to `true`, we clone the repository to the UNIX
+		// `/tmp` directory (to make sure that the repository actually exists
+		// in the specified source) and then move the cloned directory to the
+		// specified destination (this overwrites the existing directory).
+		let mut temp_dir = std::env::temp_dir();
+		if let Some(dir) = &dest.file_name() {
+			temp_dir.push(dir);
+		}
 
-				// If we want to force the clone operation when the destination
-				// directory already exists, we remove the directory and then
-				// call the clone operation again.
-				fs::remove_dir_all(dest).unwrap();
+		let repo = Repository::clone(src, &temp_dir);
 
-				// NOTE: we specify `force=false` here to avoid any possibility
-				// of an infinite recursion of the clone operation.
-				return clone(src, dest, false);
+		match repo {
+			Ok(_) => {
+				let mut options = CopyOptions::new();
+				options.overwrite = true;
+				options.content_only = true;
+
+				fs::remove_dir_all(&dest).unwrap();
+				move_dir(&temp_dir, &dest, &options).unwrap();
+
+				return open(&dest);
 			}
-			// For any other error during the clone operation, we return the
-			// error to the caller.
-			_ => Err(e),
-		},
+			Err(_) => (),
+		}
 	}
+
+	// If the destination directory does not exist locally, we can safely clone
+	// the repository with no further checks required.
+	Repository::clone(src, &dest)
 }
