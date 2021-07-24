@@ -29,7 +29,7 @@ struct Flags {
     dest: Option<PathBuf>,
 }
 
-// ? Implementation could probably could be improved.
+// ? Implementation could probably be improved.
 /// Prints a banner on the console with the specified message.
 ///
 /// The function allows the caller to specify the decorator to use and the
