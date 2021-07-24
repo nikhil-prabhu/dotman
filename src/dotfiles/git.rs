@@ -59,18 +59,17 @@ pub fn clone(src: &str, dest: &PathBuf, force: bool) -> Result<Repository, GitEr
 
 		let repo = Repository::clone(src, &temp_dir);
 
-		match repo {
-			Ok(_) => {
-				let mut options = CopyOptions::new();
-				options.overwrite = true;
-				options.content_only = true;
+		if let Ok(_) = repo {
+			let mut options = CopyOptions::new();
+			options.overwrite = true;
+			options.content_only = true;
 
-				fs::remove_dir_all(&dest).unwrap();
-				move_dir(&temp_dir, &dest, &options).unwrap();
+			fs::remove_dir_all(&dest).unwrap();
+			move_dir(&temp_dir, &dest, &options).unwrap();
 
-				return open(&dest);
-			}
-			Err(_) => (),
+			return open(&dest);
+		} else {
+			return repo;
 		}
 	}
 
