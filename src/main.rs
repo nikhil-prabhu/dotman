@@ -1,21 +1,13 @@
+pub mod consts;
 pub mod dotfiles;
 pub mod logger;
 
+use consts::*;
 use logger::{Logger, Target};
 use std::env;
 use std::path::PathBuf;
 use structopt::StructOpt;
 use terminal_size::{terminal_size, Height, Width};
-
-const DEFAULT_TERM_WIDTH: u16 = 50; // 50 columns
-const DOTMAN_VERSION: &'static str = env!("CARGO_PKG_VERSION");
-const DOTMAN_LOGO: &str = "
-       oooo             o8                                        
-  ooooo888   ooooooo  o888oo oo ooo oooo    ooooooo   oo oooooo   
-888    888 888     888 888    888 888 888   ooooo888   888   888  
-888    888 888     888 888    888 888 888 888    888   888   888  
-  88ooo888o  88ooo88    888o o888o888o888o 88ooo88 8o o888o o888o 
-";
 
 /// > Help message goes here. <
 // TODO: Improve the flag names(?).
