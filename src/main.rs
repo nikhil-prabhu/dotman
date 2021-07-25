@@ -1,7 +1,9 @@
+pub mod config;
 pub mod consts;
 pub mod display;
 pub mod dotfiles;
 pub mod logger;
+pub mod shell;
 
 use logger::{Logger, Target};
 use std::env;
