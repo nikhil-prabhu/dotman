@@ -12,29 +12,17 @@ fn get_fmt_time() -> String {
     format!("{}", date.format("%H:%M:%S"))
 }
 
-// TODO: Add support for using a file as a target.
-/// The target for the logger to write to.
-///
-/// # Variants
-///
-/// * `Stdout` - The standard output stream `(std::io::Stdout)`
-/// * `Stderr` - The standard error stream `(std::io::Stderr)`
-pub enum Target {
-    Stdout,
-    Stderr,
-}
-
 /// The logger object.
 ///
 /// # Fields
 ///
 /// * `target` - The target for the logger to write to.
 pub struct Logger {
-    pub target: Box<dyn io::Write>,
+    target: Box<dyn io::Write>,
 }
 
 impl Logger {
-    /// Creates a new logger with the specified target.
+    /// Creates a new logger that writes to stdout.
     ///
     /// # Arguments
     ///
@@ -44,27 +32,44 @@ impl Logger {
     ///
     /// Creating a new logger that writes to stdout:
     /// ```
-    /// use logger::{Logger, Target};
+    /// use logger::Logger;
     ///
-    /// let mut logger = Logger::new(Target::Stdout);
+    /// let mut logger = Logger::new();
     /// ```
-    ///
-    /// Creating a new logger that writes to stderr:
-    /// ```
-    /// use logger::{Logger, Target};
-    ///
-    /// let mut logger = Logger::new(Target::Stderr);
-    /// ```
-    pub fn new(target: Target) -> Self {
-        if let Target::Stderr = target {
-            return Self {
-                target: Box::new(io::stderr()),
-            };
-        }
-
+    pub fn new() -> Self {
         Self {
             target: Box::new(io::stdout()),
         }
+    }
+
+    /// Sets the target for the logger to use.
+    ///
+    /// # Arguments
+    ///
+    /// * `target` - The target to use (must implement the io::Write trait).
+    ///
+    /// # Examples
+    ///
+    /// Setting stderr as the target
+    /// ```
+    /// use logger::Logger;
+    /// use std::io::prelude::*;
+    ///
+    /// let mut logger = Logger::new();
+    /// logger.set_target(Box::new(std::io::stderr()));
+    /// ```
+    ///
+    /// Setting a file as the target
+    /// ```
+    /// use logger::Logger;
+    /// use std::io::prelude::*;
+    ///
+    /// let out = std::fs::File::open("/home/johndoe/log.txt").unwrap();
+    /// let mut logger = Logger::new();
+    /// logger.set_target(Box::new(out));
+    /// ```
+    pub fn set_target(&mut self, target: Box<dyn io::Write>) {
+        self.target = target;
     }
 
     /// Writes a message to the target with the label `INFO` and the current timestamp.

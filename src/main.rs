@@ -5,7 +5,7 @@ pub mod dotfiles;
 pub mod logger;
 pub mod shell;
 
-use logger::{Logger, Target};
+use logger::Logger;
 use std::env;
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -27,7 +27,7 @@ fn main() {
 
     // Parse command line flags and create a logger.
     let flags = Flags::from_args();
-    let mut logger = Logger::new(Target::Stdout);
+    let mut logger = Logger::new();
 
     // If the user did not specify a destination for the cloned dotfiles,
     // we use the current working directory.
