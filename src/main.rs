@@ -57,7 +57,10 @@ fn main() {
             "Successfully cloned dotfiles to {}",
             dest.display(),
         )),
-        // TODO: Print actual error message, rather than being a lazy twat.
-        Err(_) => logger.fatal("An error occured while cloning dotfiles."),
+        // TODO: Some error messages are not very indicative of what actually went wrong.
+        // Not yet sure of what I can do to fix this, considering the error message
+        // string is provided directly by the git2 library.
+        // ? Maybe a `match` on the ErrorKind?
+        Err(e) => logger.fatal(&e.to_string()),
     }
 }
