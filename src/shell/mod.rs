@@ -1,6 +1,8 @@
 //! Module for working with shell operations.
 use std::{
+    fs::metadata,
     io,
+    os::unix::fs::MetadataExt,
     path::PathBuf,
     process::{Child, Command, ExitStatus, Output},
 };
@@ -142,4 +144,16 @@ pub fn run_script(path: &PathBuf) -> bool {
     }
 
     false
+}
+
+/// Returns the effective user ID of current user.
+fn geteuid() -> u32 {
+    // NOTE: We assume that the `/proc/self` file always exists, which is why
+    // we just unwrap the Result.
+    metadata("/proc/self").map(|m| m.uid()).unwrap()
+}
+
+/// Returns a boolean indicating whether or not the current user is root.
+pub fn is_root() -> bool {
+    geteuid() == 0
 }
