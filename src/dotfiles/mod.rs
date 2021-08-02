@@ -13,5 +13,5 @@ pub mod git;
 /// * `dest` - The path to the local filesystem directory.
 /// * `force` - Force the clone operation to overwrite an existing local directory.
 pub fn clone(src: &str, dest: &PathBuf, force: bool) -> Result<Repository, GitError> {
-	git::clone(src, dest, force)
+    git::clone(src, dest, force)
 }

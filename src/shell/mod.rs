@@ -1,8 +1,8 @@
 //! Module for working with shell operations.
 use std::{
-	io,
-	path::PathBuf,
-	process::{Child, Command, ExitStatus, Output},
+    io,
+    path::PathBuf,
+    process::{Child, Command, ExitStatus, Output},
 };
 
 /// Returns a process::Command object.
@@ -12,13 +12,13 @@ use std::{
 /// * `cmd` - The command.
 /// * `args` - And optional vector of arguments for the command.
 fn command(cmd: &str, args: Option<&Vec<&str>>) -> Command {
-	let mut cmd = Command::new(cmd);
+    let mut cmd = Command::new(cmd);
 
-	if let Some(args) = args {
-		cmd.args(args);
-	}
+    if let Some(args) = args {
+        cmd.args(args);
+    }
 
-	cmd
+    cmd
 }
 
 // TODO: add more examples.
@@ -36,7 +36,7 @@ fn command(cmd: &str, args: Option<&Vec<&str>>) -> Command {
 /// shell::spawn("echo", Some(&vec!["Hello", "world"])).unwrap();
 /// ```
 pub fn spawn(cmd: &str, args: Option<&Vec<&str>>) -> io::Result<Child> {
-	command(cmd, args).spawn()
+    command(cmd, args).spawn()
 }
 
 // TODO: add more examples.
@@ -57,7 +57,7 @@ pub fn spawn(cmd: &str, args: Option<&Vec<&str>>) -> io::Result<Child> {
 /// shell::output("echo", Some(&vec!["Hello", "world"])).unwrap();
 /// ```
 pub fn output(cmd: &str, args: Option<&Vec<&str>>) -> io::Result<Output> {
-	command(cmd, args).output()
+    command(cmd, args).output()
 }
 
 // TODO: add more examples.
@@ -76,7 +76,7 @@ pub fn output(cmd: &str, args: Option<&Vec<&str>>) -> io::Result<Output> {
 /// shell::status("echo", Some(&vec!["Hello", "world"])).unwrap();
 /// ```
 pub fn status(cmd: &str, args: Option<&Vec<&str>>) -> io::Result<ExitStatus> {
-	command(cmd, args).status()
+    command(cmd, args).status()
 }
 
 /// Runs a command as a child process in the shell.
@@ -97,19 +97,19 @@ pub fn status(cmd: &str, args: Option<&Vec<&str>>) -> io::Result<ExitStatus> {
 /// shell::run("echo Hello world");
 /// ```
 pub fn run(cmd: &str) {
-	// Get list of arguments by splitting the command string on whitespace.
-	let args = cmd.split(char::is_whitespace).collect::<Vec<&str>>();
-	// Separate the command from the arguments.
-	let cmd = args[0];
-	let args = Vec::from(&args[1..args.len()]);
+    // Get list of arguments by splitting the command string on whitespace.
+    let args = cmd.split(char::is_whitespace).collect::<Vec<&str>>();
+    // Separate the command from the arguments.
+    let cmd = args[0];
+    let args = Vec::from(&args[1..args.len()]);
 
-	// If the arguments vector has only one element, then it's safe to assume
-	// that the command does not take any arguments.
-	if args.len() == 1 {
-		let _ = status(cmd, None);
-	}
+    // If the arguments vector has only one element, then it's safe to assume
+    // that the command does not take any arguments.
+    if args.len() == 1 {
+        let _ = status(cmd, None);
+    }
 
-	let _ = status(cmd, Some(&args));
+    let _ = status(cmd, Some(&args));
 }
 
 // TODO: add option to write script output to a stream/file.
@@ -137,9 +137,9 @@ pub fn run(cmd: &str) {
 /// }
 /// ```
 pub fn run_script(path: &PathBuf) -> bool {
-	if let Ok(_) = output(path.to_str().unwrap(), None) {
-		return true;
-	}
+    if let Ok(_) = output(path.to_str().unwrap(), None) {
+        return true;
+    }
 
-	false
+    false
 }

@@ -25,9 +25,9 @@ type ModuleCallback = fn(&Value, &mut Logger);
 /// * `args` - The arguments to be passed to the module.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Task {
-	pub name: String,
-	pub module: String,
-	pub args: Value,
+    pub name: String,
+    pub module: String,
+    pub args: Value,
 }
 
 /// Represents a dotman configuration.
@@ -37,7 +37,7 @@ pub struct Task {
 /// * `tasks` - The list (vector) of tasks that dotman has to perform.
 #[derive(Debug, Deserialize)]
 pub struct Config {
-	pub tasks: Vec<Task>,
+    pub tasks: Vec<Task>,
 }
 
 /// Parses and returns a JSON configuration.
@@ -54,11 +54,11 @@ pub struct Config {
 /// println!("{:#?}", config);
 /// ```
 pub fn parse(file: &PathBuf) -> Config {
-	let file = fs::File::open(&file).unwrap();
-	let reader = BufReader::new(file);
-	let config: Config = serde_json::from_reader(reader).unwrap();
+    let file = fs::File::open(&file).unwrap();
+    let reader = BufReader::new(file);
+    let config: Config = serde_json::from_reader(reader).unwrap();
 
-	config
+    config
 }
 
 /// Runs the list of tasks defined in a configuration.
@@ -78,18 +78,18 @@ pub fn parse(file: &PathBuf) -> Config {
 /// config::run_tasks(&config, &mut logger);
 /// ```
 pub fn run_tasks(config: &Config, logger: &mut Logger) {
-	let mut module_dispatcher: HashMap<String, ModuleCallback> = HashMap::new();
-	let tasks: &Vec<Task> = &config.tasks;
+    let mut module_dispatcher: HashMap<String, ModuleCallback> = HashMap::new();
+    let tasks: &Vec<Task> = &config.tasks;
 
-	// We use a hashmap to map each module with its callback function.
-	module_dispatcher.insert(String::from("command"), command::run);
-	module_dispatcher.insert(String::from("package"), package::install);
-	module_dispatcher.insert(String::from("script"), script::run);
+    // We use a hashmap to map each module with its callback function.
+    module_dispatcher.insert(String::from("command"), command::run);
+    module_dispatcher.insert(String::from("package"), package::install);
+    module_dispatcher.insert(String::from("script"), script::run);
 
-	// Iterate through and run each task.
-	for task in tasks.iter() {
-		display::banner(&format!("TASK: {}", &task.name), None, None);
-		module_dispatcher[&task.module](&task.args, logger);
-		println!();
-	}
+    // Iterate through and run each task.
+    for task in tasks.iter() {
+        display::banner(&format!("TASK: {}", &task.name), None, None);
+        module_dispatcher[&task.module](&task.args, logger);
+        println!();
+    }
 }
