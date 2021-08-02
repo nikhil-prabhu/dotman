@@ -1,4 +1,5 @@
 //! Module for working with Git.
+// TODO: Add authentication support for cloning private repos.
 use fs_extra::dir::{move_dir, CopyOptions};
 use git2::{Error as GitError, Repository};
 use std::{fs, path::PathBuf};
