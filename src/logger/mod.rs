@@ -24,10 +24,6 @@ pub struct Logger {
 impl Logger {
     /// Creates a new logger that writes to stdout.
     ///
-    /// # Arguments
-    ///
-    /// * `target` - The target for the logger to write to.
-    ///
     /// # Examples
     ///
     /// Creating a new logger that writes to stdout:
@@ -40,6 +36,34 @@ impl Logger {
         Self {
             target: Box::new(io::stdout()),
         }
+    }
+
+    /// Creates a new logger that writes to the specified target.
+    ///
+    /// # Arguments
+    ///
+    /// * `target` - The target for the logger to write to.
+    ///
+    /// # Examples
+    ///
+    /// Creating a new logger that writes to stderr:
+    /// ```
+    /// use logger::Logger;
+    /// use std::io::prelude::*;
+    ///
+    /// let mut logger = Logger::from(Box::new(std::io::stderr()));
+    /// ```
+    ///
+    /// Creating a new logger that writes to a file:
+    /// ```
+    /// use logger::Logger;
+    /// use std::io::prelude::*;
+    ///
+    /// let out = std::fs::File::create("/home/johndoe/log.txt").unwrap();
+    /// let mut logger = Logger::from(Box::new(out));
+    /// ```
+    pub fn from(target: Box<dyn io::Write>) -> Self {
+        Self { target }
     }
 
     /// Sets the target for the logger to use.
