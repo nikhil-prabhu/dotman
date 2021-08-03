@@ -74,7 +74,7 @@ impl Logger {
     ///
     /// # Examples
     ///
-    /// Setting stderr as the target
+    /// Setting stderr as the target:
     /// ```
     /// use logger::Logger;
     /// use std::io::prelude::*;
@@ -83,12 +83,12 @@ impl Logger {
     /// logger.set_target(Box::new(std::io::stderr()));
     /// ```
     ///
-    /// Setting a file as the target
+    /// Setting a file as the target:
     /// ```
     /// use logger::Logger;
     /// use std::io::prelude::*;
     ///
-    /// let out = std::fs::File::open("/home/johndoe/log.txt").unwrap();
+    /// let out = std::fs::File::create("/home/johndoe/log.txt").unwrap();
     /// let mut logger = Logger::new();
     /// logger.set_target(Box::new(out));
     /// ```
