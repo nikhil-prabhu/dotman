@@ -72,7 +72,7 @@ pub fn parse(file: &PathBuf) -> Config {
 ///
 /// ```
 /// let file = std::path::PathBuf::from("/home/johndoe/config.json");
-/// let mut logger = logger::Logger::new(logger::Target::Stdout);
+/// let mut logger = logger::Logger::new();
 /// let config = config::parse(&file);
 ///
 /// config::run_tasks(&config, &mut logger);
