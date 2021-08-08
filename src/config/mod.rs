@@ -40,6 +40,40 @@ pub struct Config {
     pub tasks: Vec<Task>,
 }
 
+impl Config {
+    /// Runs the list of tasks defined in a configuration.
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - The logger to write task output to.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let file = std::path::PathBuf::from("/home/johndoe/config.json");
+    /// let mut logger = logger::Logger::new();
+    /// let config = config::parse(&file);
+    ///
+    /// config.run_tasks(&mut logger);
+    /// ```
+    pub fn run_tasks(&self, logger: &mut Logger) {
+        let mut module_dispatcher: HashMap<String, ModuleCallback> = HashMap::new();
+        let tasks: &Vec<Task> = &self.tasks;
+
+        // We use a hashmap to map each module with its callback function.
+        module_dispatcher.insert(String::from("command"), command::run);
+        module_dispatcher.insert(String::from("package"), package::install);
+        module_dispatcher.insert(String::from("script"), script::run);
+
+        // Iterate through and run each task.
+        for task in tasks.iter() {
+            display::banner(&format!("TASK: {}", &task.name), None, None);
+            module_dispatcher[&task.module](&task.args, logger);
+            println!();
+        }
+    }
+}
+
 /// Parses and returns a JSON configuration.
 ///
 /// # Arguments
@@ -59,37 +93,4 @@ pub fn parse(file: &PathBuf) -> Config {
     let config: Config = serde_json::from_reader(reader).unwrap();
 
     config
-}
-
-/// Runs the list of tasks defined in a configuration.
-///
-/// # Arguments
-///
-/// * `config` - The configuration containing the tasks to run.
-/// * `logger` - The logger to write to.
-///
-/// # Examples
-///
-/// ```
-/// let file = std::path::PathBuf::from("/home/johndoe/config.json");
-/// let mut logger = logger::Logger::new();
-/// let config = config::parse(&file);
-///
-/// config::run_tasks(&config, &mut logger);
-/// ```
-pub fn run_tasks(config: &Config, logger: &mut Logger) {
-    let mut module_dispatcher: HashMap<String, ModuleCallback> = HashMap::new();
-    let tasks: &Vec<Task> = &config.tasks;
-
-    // We use a hashmap to map each module with its callback function.
-    module_dispatcher.insert(String::from("command"), command::run);
-    module_dispatcher.insert(String::from("package"), package::install);
-    module_dispatcher.insert(String::from("script"), script::run);
-
-    // Iterate through and run each task.
-    for task in tasks.iter() {
-        display::banner(&format!("TASK: {}", &task.name), None, None);
-        module_dispatcher[&task.module](&task.args, logger);
-        println!();
-    }
 }
