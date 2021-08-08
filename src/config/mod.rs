@@ -13,8 +13,8 @@ mod command;
 mod package;
 mod script;
 
-/// Represents a module's callback function.
-type ModuleCallback = fn(&Value, &mut Logger);
+/// Represents a module's handler function.
+type ModuleHandler = fn(&Value, &mut Logger);
 
 /// Represents a dotman task to perform.
 ///
@@ -57,7 +57,7 @@ impl Config {
     /// config.run_tasks(&mut logger);
     /// ```
     pub fn run_tasks(&self, logger: &mut Logger) {
-        let mut module_dispatcher: HashMap<String, ModuleCallback> = HashMap::new();
+        let mut module_dispatcher: HashMap<String, ModuleHandler> = HashMap::new();
         let tasks: &Vec<Task> = &self.tasks;
 
         // We use a hashmap to map each module with its callback function.
