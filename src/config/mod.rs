@@ -37,7 +37,7 @@ pub struct Task {
 /// * `tasks` - The list (vector) of tasks that dotman has to perform.
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    pub tasks: Vec<Task>,
+    tasks: Vec<Task>,
 }
 
 impl Config {
