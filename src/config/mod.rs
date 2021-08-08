@@ -6,7 +6,7 @@ use crate::logger::Logger;
 
 use serde::Deserialize;
 use serde_json::Value;
-use std::{collections::HashMap, fs, io::BufReader, path::PathBuf};
+use std::{collections::HashMap, fs, io::BufReader, path::Path};
 
 // Available configuration modules.
 mod command;
@@ -50,7 +50,7 @@ impl Config {
     /// # Examples
     ///
     /// ```
-    /// let file = std::path::PathBuf::from("/home/johndoe/config.json");
+    /// let file = "/home/johndoe/config.json";
     /// let mut logger = logger::Logger::new();
     /// let config = config::parse(&file);
     ///
@@ -83,11 +83,11 @@ impl Config {
 /// # Examples
 ///
 /// ```
-/// let file = std::path::PathBuf::from("/home/johndoe/config.json");
+/// let file = "/home/johndoe/config.json";
 /// let config = config::parse(&file);
 /// println!("{:#?}", config);
 /// ```
-pub fn parse(file: &PathBuf) -> Config {
+pub fn parse<P: AsRef<Path>>(file: P) -> Config {
     let file = fs::File::open(&file).unwrap();
     let reader = BufReader::new(file);
     let config: Config = serde_json::from_reader(reader).unwrap();
