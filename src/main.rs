@@ -6,6 +6,7 @@ pub mod logger;
 pub mod shell;
 
 use logger::Logger;
+use shellexpand::tilde;
 use std::env;
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -17,7 +18,6 @@ struct Flags {
     #[structopt(short = "r", long = "repository")]
     repo: String,
 
-    // TODO: special characters like `~` for $HOME currently don't work.
     #[structopt(short = "d", long = "dir")]
     dest: Option<PathBuf>,
 }
@@ -32,7 +32,17 @@ fn main() {
     // If the user did not specify a destination for the cloned dotfiles,
     // we use the current working directory.
     let dest = match flags.dest {
-        Some(d) => d,
+        Some(d) => {
+            let d_str = d.display().to_string();
+
+            // Expand `~` if exists in path.
+            if d_str.starts_with("~") {
+                PathBuf::from(format!("{}", tilde(&d_str)))
+            } else {
+                d
+            }
+        }
+
         None => {
             if let Ok(d) = env::current_dir() {
                 d
