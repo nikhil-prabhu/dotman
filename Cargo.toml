@@ -5,6 +5,7 @@ name = "dotman"
 version = "0.3.4"
 
 [profile.release]
+incremental = true
 lto = true
 
 [dependencies]
