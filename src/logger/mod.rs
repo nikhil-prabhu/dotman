@@ -4,7 +4,10 @@ extern crate chrono;
 
 use ansi_term::{Color, Style};
 use chrono::Local;
-use std::{io, process};
+use std::{
+    io::{self, Stdout, Write},
+    process,
+};
 
 /// Returns the current time in the format H:M:S (Hours, Minutes and Seconds)
 fn get_fmt_time() -> String {
@@ -17,27 +20,17 @@ fn get_fmt_time() -> String {
 /// # Fields
 ///
 /// * `target` - The target for the logger to write to.
-pub struct Logger {
-    target: Box<dyn io::Write>,
+pub struct Logger<W>
+where
+    W: Write,
+{
+    target: W,
 }
 
-impl Logger {
-    /// Creates a new logger that writes to stdout.
-    ///
-    /// # Examples
-    ///
-    /// Creating a new logger that writes to stdout:
-    /// ```
-    /// use logger::Logger;
-    ///
-    /// let mut logger = Logger::new();
-    /// ```
-    pub fn new() -> Self {
-        Self {
-            target: Box::new(io::stdout()),
-        }
-    }
-
+impl<W> Logger<W>
+where
+    W: Write,
+{
     /// Creates a new logger that writes to the specified target.
     ///
     /// # Arguments
@@ -60,40 +53,10 @@ impl Logger {
     /// use std::io::prelude::*;
     ///
     /// let out = std::fs::File::create("/home/johndoe/log.txt").unwrap();
-    /// let mut logger = Logger::from(Box::new(out));
+    /// let mut logger = Logger::from(out);
     /// ```
-    pub fn from(target: Box<dyn io::Write>) -> Self {
+    pub fn from(target: W) -> Self {
         Self { target }
-    }
-
-    /// Sets the target for the logger to use.
-    ///
-    /// # Arguments
-    ///
-    /// * `target` - The target to use (must implement the io::Write trait).
-    ///
-    /// # Examples
-    ///
-    /// Setting stderr as the target:
-    /// ```
-    /// use logger::Logger;
-    /// use std::io::prelude::*;
-    ///
-    /// let mut logger = Logger::new();
-    /// logger.set_target(Box::new(std::io::stderr()));
-    /// ```
-    ///
-    /// Setting a file as the target:
-    /// ```
-    /// use logger::Logger;
-    /// use std::io::prelude::*;
-    ///
-    /// let out = std::fs::File::create("/home/johndoe/log.txt").unwrap();
-    /// let mut logger = Logger::new();
-    /// logger.set_target(Box::new(out));
-    /// ```
-    pub fn set_target(&mut self, target: Box<dyn io::Write>) {
-        self.target = target;
     }
 
     /// Writes a message to the target with the label `INFO` and the current timestamp.
@@ -227,5 +190,21 @@ impl Logger {
         .unwrap();
 
         process::exit(1);
+    }
+}
+
+impl Logger<Stdout> {
+    /// Creates a new logger that writes to stdout.
+    ///
+    /// # Examples
+    ///
+    /// Creating a new logger that writes to stdout:
+    /// ```
+    /// use logger::Logger;
+    ///
+    /// let mut logger = Logger::new();
+    /// ```
+    pub fn new() -> Self {
+        Self::from(io::stdout())
     }
 }

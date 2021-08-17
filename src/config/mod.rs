@@ -6,7 +6,12 @@ use crate::logger::Logger;
 
 use serde::Deserialize;
 use serde_json::Value;
-use std::{collections::HashMap, fs, io::BufReader, path::Path};
+use std::{
+    collections::HashMap,
+    fs,
+    io::{BufReader, Write},
+    path::Path,
+};
 
 // Available configuration modules.
 mod command;
@@ -14,7 +19,7 @@ mod package;
 mod script;
 
 /// Represents a module's handler function.
-type ModuleHandler = fn(&Value, &mut Logger);
+type ModuleHandler<T> = fn(&Value, &mut Logger<T>);
 
 /// Represents a dotman task to perform.
 ///
@@ -56,8 +61,11 @@ impl Config {
     ///
     /// config.run_tasks(&mut logger);
     /// ```
-    pub fn run_tasks(&self, logger: &mut Logger) {
-        let mut module_dispatcher: HashMap<String, ModuleHandler> = HashMap::new();
+    pub fn run_tasks<W>(&self, logger: &mut Logger<W>)
+    where
+        W: Write,
+    {
+        let mut module_dispatcher: HashMap<String, ModuleHandler<_>> = HashMap::new();
         let tasks: &Vec<Task> = &self.tasks;
 
         // We use a hashmap to map each module with its callback function.
