@@ -2,13 +2,17 @@
 use crate::consts::*;
 use terminal_size::{terminal_size, Height, Width};
 
+// ? Implementation could probably be improved.
+/// Prints the dotman version centered with respect to the logo.
+fn print_version() {
+    println!("{: ^66}\n", format!("v{}", DOTMAN_VERSION));
+}
+
 /// Prints the dotman logo along with the version.
 pub fn print_logo() {
     println!("{}", DOTMAN_LOGO);
 
-    // Disgusting way of centering the following text, but I have no alternative
-    // at the moment.
-    println!("                         VERSION: {}\n", DOTMAN_VERSION);
+    print_version();
 }
 
 // ? Implementation could probably be improved.
