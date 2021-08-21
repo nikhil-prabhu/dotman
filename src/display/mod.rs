@@ -45,6 +45,7 @@ pub fn banner(msg: &str, dec: Option<char>, width: Option<u16>) {
     };
 
     // Generate the banner lines from the separator using the width.
+    // ? Could probably remove the need for iteration using a templating engine.
     let mut iter = 0;
     let mut line = String::new();
 
