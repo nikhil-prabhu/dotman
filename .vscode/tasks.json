@@ -31,6 +31,19 @@
       "type": "cargo",
       "command": "run",
       "problemMatcher": ["$rustc"],
+      "label": "dotman: Run with custom args",
+      "args": [
+        "--",
+        "--repository",
+        "${input:repository}",
+        "--dir",
+        "${input:dir}"
+      ]
+    },
+    {
+      "type": "cargo",
+      "command": "run",
+      "problemMatcher": ["$rustc"],
       "label": "dotman: Run without args"
     },
     {
@@ -44,6 +57,20 @@
       "command": "clean",
       "problemMatcher": ["$rustc"],
       "label": "dotman: Clean"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "repository",
+      "description": "The dotfiles repository to clone.",
+      "default": "https://github.com/nikhil-prabhu/dotfiles",
+      "type": "promptString"
+    },
+    {
+      "id": "dir",
+      "description": "The local directory to clone dotfiles to.",
+      "default": "~/Downloads/dotfiles",
+      "type": "promptString"
     }
   ]
 }
