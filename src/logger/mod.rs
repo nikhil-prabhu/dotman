@@ -69,9 +69,9 @@ where
     ///
     /// Basic usage:
     /// ```
-    /// use logger::{Logger, Target};
+    /// use logger::Logger;
     ///
-    /// let mut logger = Logger::new(Target::Stdout);
+    /// let mut logger = Logger::new();
     /// logger.info("This is an info message.");
     /// ```
     pub fn info(&mut self, msg: &str) {
@@ -95,9 +95,9 @@ where
     ///
     /// Basic usage:
     /// ```
-    /// use logger::{Logger, Target};
+    /// use logger::Logger;
     ///
-    /// let mut logger = Logger::new(Target::Stdout);
+    /// let mut logger = Logger::new();
     /// logger.success("This is a success message.");
     /// ```
     pub fn success(&mut self, msg: &str) {
@@ -121,9 +121,9 @@ where
     ///
     /// Basic usage:
     /// ```
-    /// use logger::{Logger, Target};
+    /// use logger::Logger;
     ///
-    /// let mut logger = Logger::new(Target::Stdout);
+    /// let mut logger = Logger::new();
     /// logger.warn("This is a warning message.");
     /// ```
     pub fn warn(&mut self, msg: &str) {
@@ -147,9 +147,9 @@ where
     ///
     /// Basic usage:
     /// ```
-    /// use logger::{Logger, Target};
+    /// use logger::Logger;
     ///
-    /// let mut logger = Logger::new(Target::Stdout);
+    /// let mut logger = Logger::new();
     /// logger.error("This is an error message.");
     /// ```
     pub fn error(&mut self, msg: &str) {
@@ -174,9 +174,9 @@ where
     ///
     /// Basic usage:
     /// ```
-    /// use logger::{Logger, Target};
+    /// use logger::Logger;
     ///
-    /// let mut logger = Logger::new(Target::Stdout);
+    /// let mut logger = Logger::new();
     /// logger.fatal("This is a fatal error message.");
     /// ```
     pub fn fatal(&mut self, msg: &str) {
