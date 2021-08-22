@@ -5,7 +5,7 @@
       "type": "cargo",
       "command": "run",
       "problemMatcher": ["$rustc"],
-      "label": "dotman: Run with error args",
+      "label": "dotman: Run (Error Args)",
       "args": [
         "--",
         "--repository",
@@ -18,7 +18,7 @@
       "type": "cargo",
       "command": "run",
       "problemMatcher": ["$rustc"],
-      "label": "dotman: Run with custom args",
+      "label": "dotman: Run (Custom Args)",
       "args": [
         "--",
         "--repository",
@@ -31,13 +31,13 @@
       "type": "cargo",
       "command": "run",
       "problemMatcher": ["$rustc"],
-      "label": "dotman: Run without args"
+      "label": "dotman: Run (No Args)"
     },
     {
       "type": "cargo",
       "command": "build",
       "problemMatcher": ["$rustc"],
-      "label": "dotman: Build"
+      "label": "dotman: Build (Debug)"
     },
     {
       "type": "cargo",
