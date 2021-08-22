@@ -1,5 +1,7 @@
 //! Console display and pretty printing utilities.
+use crate::config::Stats;
 use crate::consts::*;
+use ansi_term::Color;
 use terminal_size::{terminal_size, Height, Width};
 
 // ? Implementation could probably be improved.
@@ -59,4 +61,21 @@ pub fn banner(msg: &str, dec: Option<char>, width: Option<u16>) {
     println!("{}", msg);
     println!("{}", line);
     println!();
+}
+
+// TODO: Display total time taken.
+/// Pretty-prints the stats of specified tasks.
+///
+/// # Arguments
+///
+/// * `stats` - The task statistics to display.
+pub fn stats(stats: &Stats) {
+    println!(
+        "TOTAL: {}\tSUCCESS: {}\tFAILED: {}\n",
+        stats.total_tasks,
+        Color::Green
+            .bold()
+            .paint(&format!("{}", stats.success_tasks)),
+        Color::Red.bold().paint(&format!("{}", stats.failed_tasks)),
+    );
 }
