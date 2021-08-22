@@ -42,7 +42,7 @@ pub struct Task {
 /// * `tasks` - The list (vector) of tasks that dotman has to perform.
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    tasks: Vec<Task>,
+    tasks: Option<Vec<Task>>,
 }
 
 impl Config {
@@ -66,7 +66,15 @@ impl Config {
         W: Write,
     {
         let mut module_dispatcher: HashMap<String, ModuleHandler<_>> = HashMap::new();
-        let tasks: &Vec<Task> = &self.tasks;
+        let tasks: &Vec<Task>;
+        if let Some(t) = &self.tasks {
+            tasks = t;
+        } else {
+            logger.warn("No tasks specified.");
+
+            // We return early when there are no tasks to run.
+            return;
+        }
 
         // We use a hashmap to map each module with its callback function.
         module_dispatcher.insert(String::from("command"), command::run);
