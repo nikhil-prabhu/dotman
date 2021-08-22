@@ -5,19 +5,6 @@
       "type": "cargo",
       "command": "run",
       "problemMatcher": ["$rustc"],
-      "label": "dotman: Run with success args",
-      "args": [
-        "--",
-        "--repository",
-        "https://github.com/nikhil-prabhu/dotfiles",
-        "--dir",
-        "~/Downloads/dotfiles"
-      ]
-    },
-    {
-      "type": "cargo",
-      "command": "run",
-      "problemMatcher": ["$rustc"],
       "label": "dotman: Run with error args",
       "args": [
         "--",
