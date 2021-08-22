@@ -54,6 +54,13 @@
     },
     {
       "type": "cargo",
+      "command": "build",
+      "problemMatcher": ["$rustc"],
+      "label": "dotman: Build (Release)",
+      "args": ["--release"]
+    },
+    {
+      "type": "cargo",
       "command": "clean",
       "problemMatcher": ["$rustc"],
       "label": "dotman: Clean"
