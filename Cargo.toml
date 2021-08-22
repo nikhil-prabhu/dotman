@@ -2,7 +2,7 @@
 authors = ["Nikhil Prabhu <nikhilprabhu98@gmail.com>"]
 edition = "2018"
 name = "dotman"
-version = "0.4.0"
+version = "0.5.0"
 
 [profile.release]
 incremental = true

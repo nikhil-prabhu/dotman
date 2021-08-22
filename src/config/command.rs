@@ -13,7 +13,7 @@ where
     if let Some(c) = &args.as_str() {
         logger.info(&format!("Running command: {}", c));
         shell::run(c);
-        logger.info("Done.");
+        logger.success("Done.");
         Some(())
     } else {
         logger.warn("Nothing to do.");
