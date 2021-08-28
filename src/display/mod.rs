@@ -72,7 +72,7 @@ pub fn banner(msg: &str, dec: Option<char>, width: Option<u16>) {
 pub fn stats(stats: &Stats) {
     println!(
         "TOTAL: {}\tSUCCESS: {}\tFAILED: {}\n",
-        stats.total_tasks,
+        Color::Blue.bold().paint(&format!("{}", stats.total_tasks)),
         Color::Green
             .bold()
             .paint(&format!("{}", stats.success_tasks)),
