@@ -15,6 +15,7 @@ use std::{
 
 // Available configuration modules.
 mod command;
+mod cron;
 mod package;
 mod script;
 
@@ -86,10 +87,11 @@ impl Config {
             return;
         }
 
-        // We use a hashmap to map each module with its callback function.
+        // We use a hashmap to map each module with its handler function.
         module_dispatcher.insert(String::from("command"), command::run);
         module_dispatcher.insert(String::from("package"), package::install);
         module_dispatcher.insert(String::from("script"), script::run);
+        module_dispatcher.insert(String::from("cron"), cron::add);
 
         // Iterate through and run each task.
         for task in tasks.iter() {
