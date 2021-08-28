@@ -121,7 +121,10 @@ pub fn parse<P: AsRef<Path>>(file: P) -> Config {
     let reader = BufReader::new(file);
     let mut config: Config = serde_json::from_reader(reader).unwrap();
 
-    config.stats.total_tasks = config.tasks.iter().count();
+    match &config.tasks {
+        Some(tasks) => config.stats.total_tasks = tasks.iter().count(),
+        None => config.stats.total_tasks = 0,
+    };
 
     config
 }
