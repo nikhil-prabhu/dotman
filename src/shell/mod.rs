@@ -132,7 +132,7 @@ pub fn run(cmd: &str) {
 /// ```
 /// let script = std::path::PathBuf::from("/usr/bin/hello.sh");
 ///
-/// if shell::run(&script) {
+/// if shell::run_script(&script) {
 /// 	println!("Script successfully executed.");
 /// } else {
 /// 	println!("Script failed to execute.");
